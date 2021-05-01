@@ -12,7 +12,7 @@ Target Table  |Test1 |  Final Dimension or Fact table.
 
 ## Components
 ##### ProcTable [GetTest1]
-![folder](/ScreenShots/2_ProcTable_DEMO_DB.RPO.GETTEST1.png?raw=true)
+![folder](/ScreenShots/2_ProcTable_DEMO_DBRPOGETTEST1.png?raw=true)
 
 ##### ProcTableGenerator [GenerateProcTableMultipleInserts.html]
 ![folder](/ScreenShots/1_Snowflake_ProcTable_Generator.png?raw=true)
