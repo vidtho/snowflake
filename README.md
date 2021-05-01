@@ -18,10 +18,10 @@ Target Table  |Test1 |  Final Dimension or Fact table.
 ![folder](/ScreenShots/1_Snowflake_ProcTable_Generator.png?raw=true)
 
 ##### Audit Table [SP_AUDITLOG]
-![folder](/ScreenShots/3_AuditTable_r.png?raw=true)
+![folder](/ScreenShots/3_AuditTable.png?raw=true)
 
 ##### Proc Excution Table [SP_PROC_EXECUTION]
-![folder](/ScreenShots/4_sp_proc-execution_r.png?raw=true)
+![folder](/ScreenShots/4_sp_proc-execution.png?raw=true)
 
 ## Steps:
 ##### Script1.sql
