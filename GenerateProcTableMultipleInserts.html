@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="">
+  <meta name="Author" content="Vidya Thotangare">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="This Webpage is useful to genrate DDL for Snowflake ProcTables">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <title>Snowflake ProcTable Generator2</title>
+ </head>
+<!-- ======================================================================================================== -->
+<!-- CSS Styling -->
+<!-- ======================================================================================================== -->
+ <style>
+   body { background-color: #001a31; margin: 0; }
+   #align {margin-left: 15px}
+   textarea { height: auto; }
+
+   h1 {
+    font-family:'Roboto', sans-serif;
+    color: #0487af;
+    padding: 10px 0px 10px 0px;    /*10px 0px 10px 580px;*/
+	margin:0;
+	font-size:22px;
+	background-color: black;
+    text-align: center;
+    }
+
+    p {
+    font-family:'Roboto', sans-serif;
+    color:#f2f2f2;
+    font-size:15px;
+    }
+
+	.txtbxSrc {background-color: #cccccc}
+	#txtbxResult {background-color: #cccccc}
+    #txtbxProcTable  {background-color: #cccccc}
+
+    .button {
+    background-color: #0487af;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+	}
+
+	/** ============= Footer ===================== **/
+
+   #ftr {
+    position: fixed;
+    text-align:center;
+    left: 0;
+    bottom:0;
+    width:100%;
+    }
+
+   #divftr p { font-size: 12px; color: #cccccc; margin:0; padding-top: 5px; background-color: black; height:15px; }
+   #divftr a { font-size: 12px; color: #cccccc; padding: 5px 0 0 5px; }
+
+</style>
+
+<!-- ======================================================================================================== -->
+<!-- Main Content -->
+<!-- ======================================================================================================== -->
+ <body>
+
+
+  <h1>Snowflake ProcTable Generator</h1>
+
+  <div id="align">
+     <p><span>Proc Table : </span>
+     <textarea id="txtbxProcTable" name="txtbxProcTable" rows="1" cols="40" style="resize: none;" data-role="none"></textarea> 
+     <input type="checkbox" id="ddl" name="ddl" value="check1">
+     <label for="ddl"> Include Proc Table DDL</label>
+     </p>
+
+     <p>SQL statement 1:</p>
+     <textarea id="txtbxSrc1" class="txtbxSrc" name="txtbxSrc1" rows="10" cols="200" style="resize: none;" data-role="none"></textarea>
+
+     <p>SQL statement 2:</p>
+     <textarea id="txtbxSrc2" class="txtbxSrc" name="txtbxSrc2" rows="10" cols="200" style="resize: none;" data-role="none"></textarea>
+
+     <p>SQL statement 3:</p>
+     <textarea id="txtbxSrc3" class="txtbxSrc" name="txtbxSrc3" rows="10" cols="200" style="resize: none;" data-role="none"></textarea>
+
+     <p>
+     <input name="buttonExecute" class="button" 
+	 onclick="fncParseall(document.getElementById('txtbxProcTable').value, document.getElementById('txtbxSrc1').value, document.getElementById('txtbxSrc2').value, document.getElementById('txtbxSrc3').value)" 
+	 type="button" value="Execute" />
+     </p>
+
+
+     <p>SQL Script Results :</p>
+     <textarea id="txtbxResult" name="txtbxResult" rows="30" cols="200"></textarea>
+  </div>
+
+   <footer id="ftr">
+    <div id="divftr"> 
+	 <p>Have a Question?&nbsp;&nbsp;
+	 <a href="mailto:vid.misc@gmail.com?subject=Snowflake%20ProcTable%20DDL%20Generator%20Query">Contact Vidya Thotangare</a>
+	 </p> 
+	 </div>
+   </footer> 
+
+
+<!-- ======================================================================================================== -->
+<!-- Javascript -->
+<!-- ======================================================================================================== -->
+ <script>
+// ----------------------------------------------------------
+ function nth_ocurrence(str, needle, nth) {
+  for (i=0;i<str.length;i++) {
+    if (str.charAt(i) == needle) {
+        if (!--nth) {
+           return i;    
+        }
+    }
+  }
+  return str.length;
+ }
+// ----------------------------------------------------------
+  function fncParse(vProcTable, vstr, vrn) 
+  {
+ 
+  vstr2 = vstr.replaceAll("'", "''");
+  vdesc = vstr.substring(0, nth_ocurrence(vstr, ' ', 5));
+  vdesc2 = vdesc.replace(/^\s+|\s+$/g, '');
+ // console.log(vdesc2);
+
+  vstr4 = "INSERT INTO " + vProcTable + "(SQL_POSITION, SQL_DESC, SQL_VARCHAR, SQL_VARIANT)" + "\n" +
+    "SELECT " + vrn + ", \'" + vdesc2 + "\',\n" +
+     "\'" + vstr2 + "\'," + "\n" +
+    "TO_VARIANT(\'" + vstr2 + "\') " + "\n" +
+    "FROM DUAL;" + "\n" + "\n"
+  
+  return vstr4;
+  }
+// ----------------------------------------------------------
+  function fncParseall(vProcTable, vstr1, vstr2, vstr3) 
+  {
+
+  vstrDDL = `create or replace TABLE ${vProcTable}
+ (
+    SQL_POSITION INT,
+    SQL_DESC VARCHAR,
+    SQL_VARCHAR VARCHAR, -- will be used for testing the stmt
+    SQL_VARIANT VARIANT,  -- will be used by the procedure
+    ACTIVE_FLAG INT DEFAULT 1
+);
+
+Truncate TABLE ${vProcTable};
+
+`;
+   vstrParsed1 = fncParse(vProcTable, vstr1, 10) ;
+   //console.log(vstrParsed1);
+
+   if (vstr2.length > 0)
+   {
+     vstrParsed2 = fncParse(vProcTable, vstr2, 11) ;
+     //console.log(vstrParsed2);
+   }
+   else
+   { vstrParsed2 = ""; }
+
+
+   if (vstr3.length > 0)
+   {
+   vstrParsed3 = fncParse(vProcTable, vstr3, 12) ;
+   //console.log(vstrParsed3);
+   }
+   else
+   { vstrParsed3 = ""; }
+ 
+    if (document.getElementById('ddl').checked == true)
+    {
+      document.getElementById("txtbxResult").value = vstrDDL + vstrParsed1 +  vstrParsed2 + vstrParsed3 ;
+    }
+    else
+    {
+       document.getElementById("txtbxResult").value = vstrParsed1 + vstrParsed2 + vstrParsed3  ;
+    }
+  }
+// ----------------------------------------------------------
+ </script>
+  
+ </body>
+</html>
+
+
