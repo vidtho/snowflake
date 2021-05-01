@@ -15,7 +15,7 @@ Target Table  |Test1 |  Final Dimension or Fact table.
 ![folder](/ScreenShots/2_ProcTable_DEMO_DB.RPO.GETTEST1.png?raw=true)
 
 ##### ProcTableGenerator [GenerateProcTableMultipleInserts.html]
-![folder](/ScreenShots/1_Snowflake ProcTable Generator.png?raw=true)
+![folder](/ScreenShots/1_Snowflake_ProcTable_Generator.png?raw=true)
 
 ##### Audit Table [SP_AUDITLOG]
 ![folder](/ScreenShots/3_AuditTable.png?raw=true)
